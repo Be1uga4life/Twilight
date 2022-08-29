@@ -1,11 +1,11 @@
 #!bin/bash
 
-#touch users.list | > users.list
+touch users.list | > users.list
 
-#echo "Users
+echo "Users
 
-#Admins
-#" >> users.list
+Admins
+" >> users.list
 gedit users.list 2>/dev/null
 
 
@@ -31,6 +31,15 @@ do
 		then
 			deluser $SysUser &>/dev/null
 			echo -e "[\e[92mConfiguration Finished\e[39m] Removed Unauhtorized User $SysUser"
+		fi
+	fi
+	
+	elif [[ " ${SysUser[*]} " =~ " ${DeletionComparison} " ]]; then
+		read -p "$SysUser hasn't been added, Add? [y/n]: " answer
+		if [ $answer == "y" ]
+		then
+			useradd $SysUser &>/dev/null
+			echo -e "[\e[92mConfiguration Finished\e[39m] Added user $SysUser"
 		fi
 	fi
 done
@@ -70,9 +79,15 @@ do
 	chmod 777 UserFiles/$Config/$Config &> /dev/null
 
 done
-
-
 echo -e "[\e[92mConfiguration Finished\e[39m] Finished Common Admins Configurations"
+
+###### Account Policies ########
 echo -e "\e[95m------\e[94mAccount Policies\e[95m------\e[39m"
+unzip pam_secure.zip | cp -fR ./pam_secure.zip /etc/pam.d
+cp SecureLoginDef /etc/login.defs
+echo -e "[\e[92mConfiguration Finished\e[39m] Finished Login Configs"
+
+###### Packages ########
+echo -e "\e[95m------\e[94mPackages\e[95m------\e[39m"
 
 

@@ -1,5 +1,5 @@
 #!bin/bash
-
+HostUser=$(who | sed 's/\s.*$//')
 touch users.list | > users.list
 
 echo "Users
@@ -12,7 +12,7 @@ gedit users.list 2>/dev/null
 echo -e "\e[95m------\e[94mUser Auditing\e[95m------\e[39m"
 
 Users=$(awk '/^Admins/{f=0} /^.*Users/{f=1} f' users.list | sed 's/Users//' | xargs)
-Admins=$(awk '/^Users/{f=0} /^.*Admins/{f=1} f' users.list | sed 's/Admins//' | xargs)
+Admins=$(awk '/^Users/{f=0} /^.*Admins/{f=1} f' users.list | sed 's/Admins//' | sed "s/$HostUser//" | xargs)
 VmUsers=$(awk -F ':' '$3>=1000 {print $1}' /etc/passwd | sed 's/nobody//' | xargs)
 
 IFS=' ' read -r -a Users <<< "$Users"

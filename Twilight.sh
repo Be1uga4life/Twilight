@@ -89,5 +89,24 @@ echo -e "[\e[92mConfiguration Finished\e[39m] Finished Login Configs"
 
 ###### Packages ########
 echo -e "\e[95m------\e[94mPackages\e[95m------\e[39m"
+> VmPackageList
+> SusPackages
+
+sudo apt list --installed 2>/dev/null | awk '{split($0, a, "/"); print a[1]}' >> VmPackageList
+
+Pew=1
+Omae=$(wc -l < VmPackageList)
+
+for i in $(seq 1 $Omae);
+do
+	#Takes in an input from a line
+	VmPackage=$(sed -n $Pew'p' VmPackageList) &> /dev/null
+	if ! grep "$VmPackage" SafePackages &> /dev/null
+	then
+    		apt-cache search ^$VmPackage$ >> SusPackages
+	fi
+	Pew=$((Pew+1))
+done
+
 
 

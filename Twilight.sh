@@ -86,6 +86,9 @@ echo -e "\e[95m------\e[94mAccount Policies\e[95m------\e[39m"
 unzip pam_secure.zip | cp -fR ./pam_secure.zip /etc/pam.d
 cp SecureLoginDef /etc/login.defs
 echo -e "[\e[92mConfiguration Finished\e[39m] Finished Login Configs"
+passwd -l root
+> /etc/securetty
+
 
 ###### Packages ########
 echo -e "\e[95m------\e[94mPackages\e[95m------\e[39m"
@@ -108,6 +111,7 @@ do
 	Pew=$((Pew+1))
 done
 
+echo -e "\e[95m------\e[94mKernel\e[95m------\e[39m"
 touch /etc/modprobe.d/modprobe.conf | > /etc/modprobe.d/modprobe.conf
 echo "
 install dccp /bin/false
@@ -147,5 +151,9 @@ install bluetooth /bin/false
 install btusb /bin/false
 install uvcvideo /bin/false
 " >> /etc/modprobe.d/modprobe.conf
+> /etc/security/limits.conf | echo "* hard core 0" >> /etc/security/limits.conf
 
+
+cp SecureKernel /etc/sysctl.conf
+sysctl -p
 
